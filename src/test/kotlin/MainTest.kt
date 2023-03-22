@@ -1,4 +1,4 @@
-@file:Suppress("JSON_FORMAT_REDUNDANT")
+@file:Suppress("JSON_FORMAT_REDUNDANT", "OPT_IN_USAGE")
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -6,6 +6,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.junit.Test
+import java.io.File
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -60,7 +61,12 @@ class MainTest {
             }.associateBy { it.id }
         )
 
-        println(Json.encodeToString(ofData))
+        val result = Json {
+            prettyPrint = true
+            prettyPrintIndent = "  "
+        }.encodeToString(ofData)
+
+        File(".").resolve("openfeedback_data.json").writeText(result)
     }
 }
 
