@@ -27,8 +27,10 @@ if (runCommand("git", "status", "--porcelain").isEmpty()) {
 }
 
 val now = LocalDateTime.ofEpochSecond(Instant.now().epochSecond, 0, ZoneOffset.UTC)
-val slug = "${now.year}-${now.month}-${now.dayOfMonth}_${now.hour}-${now.minute}"
-runCommand("git", "checkout", "-b", "update_$slug")
+val slug = "${now.year}-${now.monthValue}-${now.dayOfMonth}_${now.hour}-${now.minute}"
+val branchName = "update_$slug"
+runCommand("git", "checkout", "-b", branchName)
 runCommand("git", "add", ".")
 runCommand("git", "commit", "-a", "-m", "Update data at $slug")
+runCommand("git", "push", "origin", branchName)
 runCommand("gh", "pr", "create", "--fill")
